@@ -46,10 +46,10 @@ The code was written using _TDD_ and _DDD_ and the persistence layer of choice w
 
 The core concepts in this project are:
 
-* **User** could be `ADMIN` or common `USER`, both can join rooms and send messages.
-* **Room** where all the chatting happens, can have many members (the concept in theory could be expanded to engulf private chatting, where you would have a special type of room that would only support two members).
-* **Message** message is just the content of a specific type of **Room Event**.
-* **Room Event** is a thing that happens inside a room, can be of a type `CREATION` that happens when the room is created and is the first event in a room, `JOIN` when a user joins a room, and `MESSAGE` carrying the message content sent by a user.
+* **User** could be `ADMIN` or common `USER`, both can join rooms and send messages.
+* **Room** where all the chatting happens, can have many members (the concept in theory could be expanded to engulf private chatting, where you would have a special type of room that would only support two members).
+* **Message** message is just the content of a specific type of **Room Event**.
+* **Room Event** is a thing that happens inside a room, can be of a type `CREATION` that happens when the room is created and is the first event in a room, `JOIN` when a user joins a room, and `MESSAGE` carrying the message content sent by a user.
 
 ## User Auth
 
@@ -170,7 +170,7 @@ When you call this endpoint, it will always return the last `prefetch` number of
 
 ### Get Older Events
 
-If the client needs to rollback the tape of events of a given room — to provide the end-user the scroll-up feature to see older messages for instance — it must `GET /room/:handle/events/before?oldestId={oldestKnownId}`.
+If the client needs to rollback the tape of events of a given room — to provide the end-user the scroll-up feature to see older messages for instance — it must `GET /room/:handle/events/before?oldestId={oldestKnownId}`.
 
 This endpoint will return at most 64 events that happened before the oldest known event ID the client knows about.
 
@@ -196,9 +196,9 @@ I think that — apart from functional features like room deletion, user managem
 * Better global exception handling with proper logging and reporting to an error catcher or APM tool.
 
 ## How to Scale this Solution?
-I think that for the use case of a live chatting server, this solution is already fairly scalable.
+I think that for the use case of a live chatting server, this solution is already fairly scalable.
 
-Live chatting is throttled by nature  — users need time to read, think, devise a response, and write a reply.
+Live chatting is throttled by nature  — users need time to read, think, devise a response, and write a reply.
 
 The challenging part of a chatting system is the event broadcasting. Each message published has to be read by hundreds of users in a short time.
 
@@ -217,7 +217,7 @@ We can also change the client-server protocol so that the client would solely re
 
 The bottleneck of this solution is the PostgreSQL database, more specifically the `live.room_events` table where all messages are stored.
 
-Once we spin up replicas to offload queries, we can optimize the main instance by using performant SSD disks and separate different disks for WAL (Write-Ahead Logging) and data storage.
+Once we spin up replicas to offload queries, we can optimize the main instance by using performant SSD disks and separate different disks for WAL (Write-Ahead Logging) and data storage.
 
 Multi-tenancy is another solution that might work. We could logically separate users and rooms between different "chat servers" (or tenants) like Slack and Discord do. This logical separation can afford us the possibility to isolate the physical infrastructure of each chat server, which would mean smaller databases working separately with less concurrent writing.
 
