@@ -221,8 +221,46 @@ Once we spin up replicas to offload queries, we can optimize the main instance b
 
 Multi-tenancy is another solution that might work. We could logically separate users and rooms between different "chat servers" (or tenants) like Slack and Discord do. This logical separation can afford us the possibility to isolate the physical infrastructure of each chat server, which would mean smaller databases working separately with less concurrent writing.
 
+## Test Scripts (Simulate Users and Clients)
 
+To simulate users sending messages and clients reading the room events, I've written a couple of **Python** scripts.
 
+### Simulate Users
 
+The `script/simulate_users.py` creates 6 random users, joins them to a few test rooms, and starts sending messages parallel.
 
+![simulate_users](images/simulator.gif)
 
+If you ran the app using Docker, you can run it this way:
+
+```bash
+docker compose build python3
+docker compose run python3 simulate_users.py
+```
+
+Or you can run in your host machine using the Python available in your development environment:
+
+```bash
+pip3 install -r requirements.txt
+python3 script/simulate_users.py -l http://localhost:8080
+```
+
+### Read the Messages
+
+The `script/room_listener.py` reads and prints in real-time the messages published in the test rooms.
+
+![room_listener](images/listener.gif)
+
+If you ran the app using Docker, you can run it this way:
+
+```bash
+docker compose build python3
+docker compose run python3 room_listener.py
+```
+
+Or you can run using the Python available in your environment:
+
+```bash
+pip3 install -r requirements.txt
+python3 script/room_listener.py -l http://localhost:8080
+```
