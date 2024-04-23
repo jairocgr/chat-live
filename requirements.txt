@@ -1,0 +1,4 @@
+lorem==0.1.1
+requests==2.31.0
+sseclient-py==1.8.0
+Faker==24.4.0

@@ -1,0 +1,43 @@
+app:
+  id: chat-live
+  user:
+    max-users-allowed: 1024
+  room:
+    max-allowed-members: 256
+    topic-replication: 1
+  executor:
+    # Per the current implementation, the global ExecutorService's thread pool size is be determined by
+    # the number cores available. This parameter is a hard cap to this and is meant to don't allow
+    # the number of threads in the pool to be greater this given limit.
+    max-threads: 4
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      concurrency: 4
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: chat-live
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  flyway:
+    url: jdbc:postgresql://${MIGRATION_DATABASE_HOST}:${MIGRATION_DATABASE_PORT}/${MIGRATION_DATABASE_NAME}
+    user: ${MIGRATION_DATABASE_USER}
+    password: ${MIGRATION_DATABASE_PASSWORD}
+    schemas: live
+    locations: classpath:db/migration
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: ${RUNNING_PORT}
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}

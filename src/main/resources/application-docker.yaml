@@ -1,0 +1,21 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka:19092
+  flyway:
+    url: jdbc:postgresql://db:5432/chat
+    user: postgres
+    password: postgres
+    schemas: live
+    locations: classpath:db/migration
+  datasource:
+    url: jdbc:postgresql://db:5432/chat
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 8080
+
+redis:
+  host: redis
+  port: 6379
